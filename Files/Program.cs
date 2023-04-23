@@ -5,59 +5,40 @@
         static void Main(string[] args)
         {
             /*
-               "Using blocks"
+               StreamWriter
+               - It's a stream capable of writing characters from a binary stream (E.G. FileStream).
+               - Data support in text format.
 
-              -Simplified syntax that garantees that IDisposable objects will be closed.
-              -IDisposable objects are NOT managed by the CLR. They have to be manually closed.
-              
+               - Instantiation:
+                   -Several constructors
+                   -File/FileInfo
+                         - CreateText(path)
+                         - AppendText(String)
+         
              */
 
-            string path = @"c:\temp\file1.txt";
 
-            // Instantiated resources will be automatically closed.
-            // "Using blocks" can be nested.
-            // "Using blocks" will not handle exceptions. If you want to handle it, it must
-            // have a try/catch block.
+            /*
+               Read all content from file1 and save it in file2 in an uppercase format .
+             */
+            string sourcePath = @"c:\temp\file1.txt";
+            string targetPath = @"c:\temp\file2.txt";
 
             try
             {
-                using (FileStream fs = new FileStream(path, FileMode.Open))
-                {
+                string[] lines = File.ReadAllLines(sourcePath);
 
-                    using (StreamReader sr = new StreamReader(fs))
+                using(StreamWriter sr = File.AppendText(targetPath))
+                {
+                    foreach(string line in lines)
                     {
-                        while (!sr.EndOfStream)
-                        {
-                            string line = sr.ReadLine();
-                            Console.WriteLine(line);
-                        }
+                        sr.WriteLine(line.ToUpper());
                     }
                 }
             }
             catch (IOException e)
             {
                 Console.WriteLine("An error occurred!");
-                Console.WriteLine(e.Message);
-            }
-
-            Console.WriteLine("--------------------------------------------");
-
-            // Other way instead of using nested blocks 
-
-            try
-            {
-                using (StreamReader sr = File.OpenText(path))
-                {
-                    while (!sr.EndOfStream)
-                    {
-                        string line = sr.ReadLine();
-                        Console.WriteLine(line);
-                    }
-                }
-            }
-            catch (IOException e)
-            {
-                Console.WriteLine("An error occurred");
                 Console.WriteLine(e.Message);
             }
         }
