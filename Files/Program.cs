@@ -5,36 +5,60 @@
         static void Main(string[] args)
         {
             /*
-               StreamWriter
-               - It's a stream capable of writing characters from a binary stream (E.G. FileStream).
-               - Data support in text format.
+                ******* Directory and DirectoryInfo ******* 
+               
+                - Folders operations (create, enumerate, get files, etc)
 
-               - Instantiation:
-                   -Several constructors
-                   -File/FileInfo
-                         - CreateText(path)
-                         - AppendText(String)
-         
+                => Directory:  static members (simple, but performs security check for each operation).
+                => DirectoryInfo: instance members
              */
 
 
+            // Tasks
+            // - List folders from a known folder
+            // - List files from a known folder
+            // - Create a folder
+
+
+            // - Folder structure
             /*
-               Read all content from file1 and save it in file2 in an uppercase format .
+             *                                     (Folders)        (Files)
+               c: ->  temp ->    myfolder  ->       docs          doc1.txt and doc2.txt
+                                                    notes         note1.txt and note2.txt
+                                    |
+                                    V
+                
+                                  (Files)
+                                 file1.txt
+                                 file2.txt
              */
-            string sourcePath = @"c:\temp\file1.txt";
-            string targetPath = @"c:\temp\file2.txt";
+
+
+            string path = @"c:\temp\myfolder";
 
             try
             {
-                string[] lines = File.ReadAllLines(sourcePath);
-
-                using(StreamWriter sr = File.AppendText(targetPath))
+                // List all subfolders from myfolder
+                // Here there's a mask for searching : any filename and any extension.
+                var folders = Directory.EnumerateDirectories(path, "*.*", SearchOption.AllDirectories) ;
+                Console.WriteLine("FOLDERS: ");
+                foreach (string s in folders)
                 {
-                    foreach(string line in lines)
-                    {
-                        sr.WriteLine(line.ToUpper());
-                    }
+                    Console.WriteLine(s);
                 }
+
+                // List all files from myfolder
+                var files = Directory.EnumerateFiles(path, "*.*", SearchOption.AllDirectories);
+                Console.WriteLine("FILES: ");
+                foreach (string s in files)
+                {
+                    Console.WriteLine(s);
+                }
+
+                // Create a folder
+                // Suppose you want to create a new folder from myfolder.
+                Directory.CreateDirectory(path + @"\newFolder");
+
             }
             catch (IOException e)
             {
